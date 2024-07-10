@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 const port = 5000;
 const mongoose = require('mongoose');
-const { register } = require('./controller/register');
 const config = require('./config/key');
+const cookieParser = require('cookie-parser');
+const userRouter = require('./routes/user');
 mongoose.connect(config.mongoUri, {
     // useNewUrlParser:true,
     // useUnifiedTopology: true,
@@ -16,14 +17,12 @@ mongoose.connect(config.mongoUri, {
 })
 
 app.use(express.json());
+app.use(cookieParser());
+app.use('/api/users', userRouter);
 
-
-app.get('/', (req, res) => {
+app.get('/',  (req, res) => {
     res.send('Hello World');
 });
-
-app.post('/register', register);
-
 
 app.listen(port, () => {
     console.log(port + ' listening');
